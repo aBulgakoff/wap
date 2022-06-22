@@ -1,0 +1,12 @@
+#main > div img{
+    width: 100%;
+}
+#main > div {
+    display: inline-block;
+    vertical-align: top;
+    width: 45%;
+}
+
+footer img{
+    height: 3vw;
+}

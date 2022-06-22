@@ -4,26 +4,34 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="index.css" type="text/css">
+    <title>Homepage</title>
 </head>
 <body>
-<section>
+<section id="main">
     <h1>Oleksandr 'Alex' Bulhakov</h1>
-    <div style="display:inline-block;vertical-align:top;">
+    <div>
         <figure>
-            <img src="./images/masked.jpg" alt="Selfie at Grand station in Chicago" style="width:100%">
+            <img src="./images/masked.jpg" alt="Selfie at Grand station in Chicago">
             <figcaption>Keeping a distance at Chicago's Grand subway station.</figcaption>
         </figure>
     </div>
-    <div style="display:inline-block;">
+    <div>
         <ul>
             <li>Lab0: The homepage</li>
+            <li> <a href="about.html">Lab1: About</a></li>
         </ul>
     </div>
 </section>
 <footer>
-    <a href="https://validator.w3.org/nu/?doc=https%3A%2F%2Fabulgakoff.github.io%2Fwap%2F">
-        <img src="./images/w3c.png" alt="html validator" width="50" height="50"/></a>
+    <div class="validators-report">
+        <a href="https://validator.w3.org/nu/?doc=https%3A%2F%2Fabulgakoff.github.io%2Fwap%2F">
+            <img src="./images/w3c.png" alt="HTML validator"/>
+        </a>
+        <a href="https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fabulgakoff.github.io%2Fwap%2F&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en">
+            <img src="https://jigsaw.w3.org/css-validator/images/vcss-blue" alt="HTML validator"/>
+        </a>
+    </div>
 </footer>
 </body>
 </html>

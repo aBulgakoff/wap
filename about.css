@@ -1,0 +1,51 @@
+body {
+    font-family: monospace;
+    font-size: large;
+    background-color: #f0ffff;
+}
+
+a {
+    text-decoration: none;
+}
+
+#top {
+    border: hidden;
+}
+
+#top > h2 {
+    font-style: normal;
+    font-weight: bolder;
+}
+
+.about-info div, ul {
+    border: #6495ec solid;
+    border-radius: 0.5vw;
+    margin: 1vw;
+    padding: 1vw;
+}
+
+.about-info h1, h2, h3, h4, h5 {
+    color: #6495ec;
+    font-style: italic;
+    text-shadow: 1px 1px #1e90ff;
+}
+
+ul.common-list {
+    list-style-type: circle;
+    padding-left: 2vw;
+}
+
+#illustration > div {
+    display: inline-block;
+    vertical-align: top;
+    width: 45%;
+    border: none;
+}
+
+#illustration > div img{
+   width: 100%;
+}
+
+#validators-report img{
+    height: 3vw;
+}
