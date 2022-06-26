@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Registration</title>
+    <link href="registration.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+<form id="page">
+    <header><h1>Workshop Registration</h1></header>
+
+    <div class="container">
+        <div class="side">
+            <p><b>Register now while seats are available!</b></p>
+
+            <div class="field"><label for="first-name"> <strong>First Name</strong> <span
+                    class="req-marker">*</span></label>
+                <input type="text" id="first-name" name="first_name" required></div>
+            <div class="field"><label for="last-name"><strong>Last Name</strong><span
+                    class="req-marker">*</span></label> <input type="text" id="last-name" name="last_name" required>
+            </div>
+            <div class="field"><label for="company-name"><strong>Company/Institution</strong><span
+                    class="req-marker">*</span></label> <input type="text" id="company-name" name="last_name"
+                                                               required></div>
+            <div class="field"><label for="address"><strong>Address</strong><span
+                    class="req-marker">*</span></label><textarea id="address" name="Address" rows="4"
+                                                                 required> </textarea></div>
+            <div class="field"><label for="city"><strong>City</strong><span class="req-marker">*</span></label><input
+                    type="text" id="city" name="City" required></div>
+            <div class="field"><label for="province"><strong>State/Province/Region</strong></label>
+                <select id="province" name="Province">
+                    <option value="">-Select-</option>
+                    <option value="">Iowa</option>
+                    <option value="">North Carolina</option>
+                    <option value="">Texas</option>
+                    <option value="">California</option>
+                </select>
+            </div>
+            <div class="field"><label for="country"><strong>Country</strong></label>
+                <select id="country" name="Country">
+                    <option value="">-Select-</option>
+                    <option value="">United States</option>
+                    <option value="">Turkmenistan</option>
+                    <option value="">Turkey</option>
+                    <option value="">China</option>
+                </select>
+            </div>
+            <div class="field"><label for="email"><strong>Email</strong><span class="req-marker">*</span></label>
+                <input type="text" id="email" name="Email" required></div>
+            <div class="field"><label for="phone"><strong>Phone Number</strong><span
+                    class="req-marker"> *</span></label> <input type="text" id="phone" name="Phone" required></div>
+        </div>
+
+        <div class="side">
+            <p><u>Lunch</u></p>
+            <div class="field">
+                <label for="meal"> <strong>Meal Preference</strong></label>
+                <select id="meal">
+                    <option>Vegetarian</option>
+                    <option>Non-vegetarian</option>
+                </select>
+            </div>
+            <p><u>Payment Details</u></p>
+            <div class="field">
+                <label> <strong>Payment mode</strong></label>
+                <div class="form-group">
+                    <div><input type="checkbox" value="cash"/>Cash</div>
+                    <div><input type="checkbox" value="cheque"/>Cheque</div>
+                    <div><input type="checkbox" value="draft"/> Demand Draft</div>
+                </div>
+            </div>
+            <div class="field">
+                <label for="cheque-no"> <strong>DD/Cheque No.</strong></label><input id="cheque-no" type="text"
+                                                                                    name="company"/>
+            </div>
+            <div class="field">
+                <label for="drawn-on"> <strong>Drawn On (Bank Name)</strong></label><input id="drawn-on" type="text"
+                                                                                           name="company"/>
+            </div>
+            <div class="field">
+                <label for="payable-at"> <strong>Payable at</strong></label><input id="payable-at" type="text"
+                                                                                   name="company"/>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div>
+            <input class="reg-button" type="submit" value="Submit"/>
+            <input class="reg-button" type="reset" value="Reset"/>
+        </div>
+        <div id="validators-report">
+            <a href="https://validator.w3.org/nu/?doc=https%3A%2F%2Fabulgakoff.github.io%2Fwap%2Fregistration.html">
+                <img src="./images/w3c.png" alt="HTML validator"/>
+            </a>
+            <a href="https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fabulgakoff.github.io%2Fwap%2Fregistration.html&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en">
+                <img src="https://jigsaw.w3.org/css-validator/images/vcss-blue" alt="HTML validator"/>
+            </a>
+        </div>
+    </footer>
+
+</form>
+</body>
+</html>

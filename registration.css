@@ -1,0 +1,61 @@
+body {
+    font-family: sans-serif;
+}
+
+header, footer {
+    height: 3vw;
+    background-color: #5f9ea0;
+    display: flex;
+    margin: 0 auto;
+    width: 90%;
+    padding-bottom: 1vw;
+    padding-left: 3vw;
+    border: 0.3vw solid #5f9ea0;
+    text-align: center;
+    display: block;
+
+}
+
+footer {
+    background-color: #f0ffff;
+    border: 0.3vw azure solid;
+
+}
+
+.req-marker {
+    color: red;
+}
+
+.container {
+    background-color: #f0f8ff;
+    display: flex;
+    margin: 0 auto;
+    width: 90%;
+    border: 0.3vw solid #5f9ea0;
+    padding-left: 3vw;
+}
+
+.side {
+    width: 50%;
+}
+
+.field {
+    padding: 1vw;
+    display: flex;
+}
+
+.field label, .field select {
+    width: 35%;
+}
+footer> div{
+    text-align: center;
+}
+
+.reg-button {
+    background-color: #5f9ea0;
+    color: white;
+}
+#validators-report img{
+    margin-top:  3vw;
+    height: 3vw;
+}
