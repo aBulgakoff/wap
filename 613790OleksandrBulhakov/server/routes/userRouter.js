@@ -3,8 +3,8 @@ const userController = require('../controllers/userController');
 
 const r = express.Router();
 
-r.get("/cart/:userId", userController.getCartById);
-r.put("/cart/:userId", userController.populateCart);
-r.post("/cart/checkout/:userId", userController.checkout);
+r.get("/cart", userController.getCartById);
+r.put("/cart", userController.populateCart);
+r.post("/cart/checkout", userController.checkout);
 
 module.exports = r;

@@ -11,21 +11,21 @@ exports.login = (req, res, next) => {
 }
 
 exports.getCartById = (req, res, next) => {
-    res.status(200).json(User.getCartByUserId(req.params.userId));
+    res.status(200).json(User.getCartByUserId(req.userId));
 }
 
 exports.populateCart = (req, res, next) => {
-    const userCart = User.getCartByUserId(req.params.userId);
+    const userCart = User.getCartByUserId(req.userId);
     const requestedChange = req.body.change;
-    changeId = requestedChange.productId;
-    changeQty = requestedChange.qty;
+    const changeId = requestedChange.productId;
+    const changeQty = requestedChange.qty;
     Product.checkStockQtyById(changeId, changeQty);
     userCart[changeId] = changeQty;
     res.status(200).json(userCart);
 }
 
 exports.checkout = (req, res, next) => {
-    let userCart = User.getCartByUserId(req.params.userId);
+    let userCart = User.getCartByUserId(req.userId);
     for (const p in userCart) {
         Product.checkStockQtyById(p, userCart[p]);
     }

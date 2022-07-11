@@ -1,5 +1,4 @@
 const serverURL = "http://localhost:3333";
-let uId = 1;
 
 function changeInterfaceToAuthorized() {
     document.getElementById("header-login").style.display = "none";
@@ -37,18 +36,31 @@ const getCartLine = function (title, price, id, qty) {
             <td>${price}</td>
             <td>${parseFloat(price) * qty}</td>
             <td>
-            <input type="image" src='${serverURL}/pic/dash.svg' alt="reduce qty" data-id="${id}" onclick="changeQty(this.dataset.id)"/>
-            <input type="text" data-productId="${id}" value='${qty}' size="1">
-            <input type="image" src='${serverURL}/pic/plus.svg' alt="increase qty" data-id="${id}" onclick="changeQty(this.dataset.id)"/>
+            <input type="image" src='${serverURL}/pic/dash.svg' alt="reduce qty" data-id="qty-${id}" onclick="changeQty(this.dataset.id, -1)"/>
+            <input type="text" id="qty-${id}" value='${qty}' size="1" onchange="populateCart(this)">
+            <input type="image" src='${serverURL}/pic/plus.svg' alt="increase qty" data-id="qty-${id}" onclick="changeQty(this.dataset.id, 1)"/>
             </td>
         </tr>
         `
 }
 
-const changeQty = function (id){
-    document.getElementById(id);
+const changeQty = function (id, multiplier) {
+    document.getElementById(id).value = parseInt(document.getElementById(id).value) + 1 * multiplier;
 }
 
+const populateCart = async function (field) {
+    const id = field.id.split("-")[1];
+    const val = parseInt(field.value);
+    if (Number.isNaN(val) || val < 0) {
+        alert("Please enter a number");
+        let cart = await fetchCart();
+        field.value = cart[id];
+    } else {
+        const res = await authorizedPut("users/cart", {"change":{"productId":id, "qty":val}});
+
+    }
+    console.log(field.value);
+}
 
 const getCartFooter = function (tPrice) {
     return `
@@ -72,7 +84,23 @@ const authorizedPost = async function (path, body) {
         },
         body
     });
-    if (err.status === 401) {
+    if (req.status === 401) {
+        changeInterfaceToUnauthorized();
+    }
+    return await req.json();
+}
+
+const authorizedPut = async function (path, body) {
+    const authorization = sessionStorage.getItem("accessToken");
+    const req = await fetch(`${serverURL}/${path}`, {
+        method: 'PUT',
+        headers: {
+            authorization,
+            'Content-Type': 'application/json'
+        },
+        "body": JSON.stringify(body)
+    });
+    if (req.status === 401) {
         changeInterfaceToUnauthorized();
     }
     return await req.json();
@@ -91,8 +119,8 @@ const authorizedGet = async function (path, params) {
         changeInterfaceToUnauthorized();
     }
     return await req.json();
-
 }
+
 const updateDisplayedName = () => {
     const token = sessionStorage.getItem("accessToken");
     const name = token.split(" ")[1].split("-")[1];
@@ -117,7 +145,6 @@ const clickLogin = async function () {
         updateDisplayedName();
         changeInterfaceToAuthorized();
     }
-
     initApp();
 }
 
@@ -135,7 +162,7 @@ async function initApp() {
     }
     document.getElementById("products").innerHTML = pTable;
 
-    let cart = await fetchCart(uId);
+    let cart = await fetchCart();
     console.log(cart);
     let cTable = ''
     let totalPrice = 0;
@@ -163,8 +190,8 @@ async function fetchProducts() {
     return await authorizedGet(`products/`);
 }
 
-async function fetchCart(userId) {
-    let cart = await authorizedGet(`users/cart/${userId}`);
+async function fetchCart() {
+    let cart = await authorizedGet(`users/cart/`);
     for (const c in cart) {
         if (cart[c] == 0) delete cart[c];
     }
