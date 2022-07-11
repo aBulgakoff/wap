@@ -25,10 +25,11 @@ const getProductsLine = function (p) {
             <td>${p.price}</td>
             <td>${p.qty}</td>
             <td><img src='${serverURL}/pic/${p.id}.svg' alt='pdouct ${p.id} picture'></td>
-            <td><a href="#"><img src='${serverURL}/pic/bag.svg' alt="order"></a></td>
+            <td><a href="#" data-id="${p.id}" onclick="populateCart(this.dataset.id)"><img src='${serverURL}/pic/bag.svg' alt="order"></a></td>
         </tr>
 `
 }
+
 const getCartLine = function (title, price, id, qty) {
     return `
         <tr>
@@ -37,26 +38,40 @@ const getCartLine = function (title, price, id, qty) {
             <td>${parseFloat(price) * qty}</td>
             <td>
             <input type="image" src='${serverURL}/pic/dash.svg' alt="reduce qty" data-id="qty-${id}" onclick="changeQty(this.dataset.id, -1)"/>
-            <input type="text" id="qty-${id}" value='${qty}' size="1" onchange="populateCart(this)">
+            <input type="text" id="qty-${id}" value='${qty}' size="1" onchange="updateCart(this)">
             <input type="image" src='${serverURL}/pic/plus.svg' alt="increase qty" data-id="qty-${id}" onclick="changeQty(this.dataset.id, 1)"/>
             </td>
         </tr>
         `
 }
-
-const changeQty = function (id, multiplier) {
-    document.getElementById(id).value = parseInt(document.getElementById(id).value) + 1 * multiplier;
+const populateCart = async function (productId) {
+    let elementId = `qty-${productId}`;
+    let val = parseInt(document.getElementById(elementId).value) + 1;
+    document.getElementById(elementId).value = val;
+    const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
+    res.error && alert(res.error);
 }
 
-const populateCart = async function (field) {
-    const id = field.id.split("-")[1];
+
+const changeQty = async function (id, multiplier) {
+    const productId = id.split("-")[1];
+    let val = parseInt(document.getElementById(id).value) + multiplier * 1;
+    document.getElementById(id).value = val;
+    const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
+    res.error && alert(res.error);
+}
+
+const updateCart = async function (field) {
+
     const val = parseInt(field.value);
-    if (Number.isNaN(val) || val < 0) {
-        alert("Please enter a number");
+
+    if (Number.isNaN(val) || val < 1) {
+        alert("Please enter a (positive) number.");
         let cart = await fetchCart();
-        field.value = cart[id];
+        field.value = cart[productId];
     } else {
-        const res = await authorizedPut("users/cart", {"change":{"productId":id, "qty":val}});
+        const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
+        res.error && alert(res.error);
 
     }
     console.log(field.value);
