@@ -40,7 +40,7 @@
         </div>
     </header>
 </div>
-
+<div class="container" id="greeting"><h2>Welcome to my store</h2></div>
 <div class="container" id="main-content">
     <h2> Product list</h2>
     <table class="table">
@@ -56,20 +56,23 @@
         <tbody id="products"></tbody>
     </table>
 
-    <h2>Your shopping cart</h2>
-    <table class="table">
-        <thead class="thead-dark">
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Price</th>
-            <th scope="col">Total</th>
-            <th scope="col">Quantity</th>
-        </tr>
-        </thead>
-        <tbody id="cart">
+    <div id="cart-empty"><h2>Your shopping cart is empty</h2></div>
+    <div id="cart-non-empty">
+        <h2>Your shopping cart</h2>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Total</th>
+                <th scope="col">Quantity</th>
+            </tr>
+            </thead>
+            <tbody id="cart">
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <footer>

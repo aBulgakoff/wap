@@ -4,6 +4,7 @@ function changeInterfaceToAuthorized() {
     updateDisplayedName();
     document.getElementById("header-login").style.display = "none";
     document.getElementById("header-welcome").style.display = "block";
+    document.getElementById("greeting").style.display = "none";
     document.getElementById("main-content").style.display = "block";
     document.getElementById("log-btn").style.display = "none";
     document.getElementById("logout-btn").style.display = "block";
@@ -14,6 +15,7 @@ function changeInterfaceToAuthorized() {
 function changeInterfaceToUnauthorized() {
     document.getElementById("header-login").style.display = "block";
     document.getElementById("header-welcome").style.display = "none";
+    document.getElementById("greeting").style.display = "block";
     document.getElementById("main-content").style.display = "none";
     document.getElementById("log-btn").style.display = "block";
     document.getElementById("logout-btn").style.display = "none";
@@ -195,13 +197,20 @@ async function initApp() {
     let cart = await fetchCart();
     let cTable = ''
     let totalPrice = 0;
-    for (const order in cart) {
-        let pInfo = products.filter((p) => p.id == order)[0];
-        totalPrice += parseFloat(pInfo.price);
-        cTable += getCartLine(pInfo.title, pInfo.price, order, cart[order])
+    if (Object.keys(cart).length) {
+        document.getElementById("cart-empty").style.display = "none";
+        document.getElementById("cart-non-empty").style.display = "block";
+        for (const order in cart) {
+            let pInfo = products.filter((p) => p.id == order)[0];
+            totalPrice += parseFloat(pInfo.price);
+            cTable += getCartLine(pInfo.title, pInfo.price, order, cart[order])
+        }
+        cTable += getCartFooter(totalPrice);
+        document.getElementById("cart").innerHTML = cTable;
+    } else {
+        document.getElementById("cart-empty").style.display = "block";
+        document.getElementById("cart-non-empty").style.display = "none";
     }
-    cTable += getCartFooter(totalPrice);
-    document.getElementById("cart").innerHTML = cTable;
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
