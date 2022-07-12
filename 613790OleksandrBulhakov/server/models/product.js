@@ -65,7 +65,6 @@ module.exports = class Product {
     static updateStockQtyById(productId, newQty) {
         const index = Product.findIndexById(productId);
         newQty = db[index].qty - newQty;
-        console.log(newQty)
         if (newQty < 0) throw new Error("Quantity can not be negative");
         db[index].qty = newQty;
         return db[index];
