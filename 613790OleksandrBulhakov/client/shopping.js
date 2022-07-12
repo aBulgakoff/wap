@@ -240,6 +240,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     initApp();
     document.getElementById("log-btn").onclick = clickLogin;
     document.getElementById("logout-btn").onclick = clickLogout;
+    document.getElementById("main-bag").onclick = () => location.reload();
 });
 
 window.onload = async function () {
