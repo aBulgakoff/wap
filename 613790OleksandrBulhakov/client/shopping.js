@@ -41,7 +41,7 @@ const getCartLine = function (title, price, id, qty) {
         <tr>
             <td>${title}</td>
             <td>${price}</td>
-            <td>${parseFloat(price) * qty}</td>
+            <td id="total-product-${id}">${parseFloat(price) * qty}</td>
             <td>
             <input type="image" src='${serverURL}/pic/dash.svg' alt="reduce qty" data-id="qty-${id}" onclick="changeQty(this.dataset.id, -1)"/>
             <input type="text" id="qty-${id}" value='${qty}' size="1" onchange="updateCart(this)">
@@ -64,6 +64,7 @@ const populateCart = async function (productId) {
         res.error && alert(res.error);
         await initApp();
     }
+    await recalculateTotalForProduct(productId);
     await recalculateTotal();
 }
 
@@ -73,6 +74,7 @@ const changeQty = async function (id, multiplier) {
     document.getElementById(id).value = val;
     const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
     res.error && alert(res.error);
+    await recalculateTotalForProduct(productId);
     await recalculateTotal();
     val || await initApp();
 }
@@ -90,6 +92,7 @@ const updateCart = async function (field) {
         const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
         res.error && alert(res.error);
     }
+    await recalculateTotalForProduct(productId);
     await recalculateTotal();
     val || await initApp();
 }
@@ -190,6 +193,22 @@ const clickLogout = async function () {
 const clickSubmit = async function () {
     const res = await authorizedPost("users/cart/checkout");
     (res.error && alert(res.error)) || await initApp();
+}
+
+const recalculateTotalForProduct = async function (productId) {
+    let products = await fetchProducts();
+    let cart = await fetchCart();
+    let totalPrice = 0;
+
+    if (Object.keys(cart).length) {
+        if (productId in cart){
+            let pInfo = products.filter((p) => p.id == productId)[0];
+            totalPrice += parseFloat(pInfo.price) * parseInt(cart[productId]);
+        }
+    }
+    if (document.getElementById(`total-product-${productId}`)) {
+        document.getElementById(`total-product-${productId}`).innerHTML = totalPrice;
+    }
 }
 
 const recalculateTotal = async function () {
