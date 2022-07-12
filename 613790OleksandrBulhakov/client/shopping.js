@@ -64,6 +64,7 @@ const populateCart = async function (productId) {
         res.error && alert(res.error);
         await initApp();
     }
+    await recalculateTotal();
 }
 
 const changeQty = async function (id, multiplier) {
@@ -72,6 +73,7 @@ const changeQty = async function (id, multiplier) {
     document.getElementById(id).value = val;
     const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
     res.error && alert(res.error);
+    await recalculateTotal();
     val || await initApp();
 }
 
@@ -88,13 +90,14 @@ const updateCart = async function (field) {
         const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
         res.error && alert(res.error);
     }
+    await recalculateTotal();
     val || await initApp();
 }
 
 const getCartFooter = function (tPrice) {
     return `
         <tr>
-            <td class="table-end" colspan="5">Total: ${tPrice}</td>
+            <td class="table-end" colspan="5" id="total-p">Total: ${tPrice}</td>
         </tr>
         <tr>
             <td class="table-end" colspan="5">
@@ -189,6 +192,21 @@ const clickSubmit = async function () {
     (res.error && alert(res.error)) || await initApp();
 }
 
+const recalculateTotal = async function () {
+    let products = await fetchProducts();
+    let cart = await fetchCart();
+    let totalPrice = 0;
+    if (Object.keys(cart).length) {
+        for (const order in cart) {
+            let pInfo = products.filter((p) => p.id == order)[0];
+            totalPrice += parseFloat(pInfo.price) * parseInt(cart[order]);
+        }
+    }
+    if (document.getElementById("total-p")) {
+        document.getElementById("total-p").innerHTML = `Total: ${totalPrice}`;
+    }
+}
+
 async function initApp() {
     await applyAuthorization();
     let products = await fetchProducts();
@@ -206,7 +224,7 @@ async function initApp() {
         document.getElementById("cart-non-empty").style.display = "block";
         for (const order in cart) {
             let pInfo = products.filter((p) => p.id == order)[0];
-            totalPrice += parseFloat(pInfo.price);
+            totalPrice += parseFloat(pInfo.price) * parseInt(cart[order]);
             cTable += getCartLine(pInfo.title, pInfo.price, order, cart[order])
         }
         cTable += getCartFooter(totalPrice);
