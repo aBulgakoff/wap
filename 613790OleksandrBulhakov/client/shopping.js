@@ -8,8 +8,6 @@ function changeInterfaceToAuthorized() {
     document.getElementById("main-content").style.display = "block";
     document.getElementById("log-btn").style.display = "none";
     document.getElementById("logout-btn").style.display = "block";
-
-
 }
 
 function changeInterfaceToUnauthorized() {
@@ -52,6 +50,7 @@ const getCartLine = function (title, price, id, qty) {
         </tr>
         `
 }
+
 const populateCart = async function (productId) {
     let elementId = `qty-${productId}`;
     let element = document.getElementById(elementId);
@@ -63,10 +62,9 @@ const populateCart = async function (productId) {
     } else {
         const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": 1}});
         res.error && alert(res.error);
-        initApp();
+        await initApp();
     }
 }
-
 
 const changeQty = async function (id, multiplier) {
     const productId = id.split("-")[1];
@@ -74,7 +72,7 @@ const changeQty = async function (id, multiplier) {
     document.getElementById(id).value = val;
     const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
     res.error && alert(res.error);
-    val || initApp();
+    val || await initApp();
 }
 
 const updateCart = async function (field) {
@@ -90,7 +88,7 @@ const updateCart = async function (field) {
         const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
         res.error && alert(res.error);
     }
-    val || initApp();
+    val || await initApp();
 }
 
 const getCartFooter = function (tPrice) {
@@ -100,11 +98,12 @@ const getCartFooter = function (tPrice) {
         </tr>
         <tr>
             <td class="table-end" colspan="5">
-            <button type="button" class="btn btn-outline-primary">Submit</button>
+            <button type="button" class="btn btn-outline-primary" id="ship-it">Submit</button>
             </td>
         </tr>
     `
 }
+
 const authorizedPost = async function (path, body) {
     const authorization = sessionStorage.getItem("accessToken");
     const req = await fetch(`${serverURL}/${path}`, {
@@ -113,7 +112,7 @@ const authorizedPost = async function (path, body) {
             authorization,
             'Content-Type': 'application/json'
         },
-        body
+        "body": JSON.stringify(body)
     });
     if (req.status === 401) {
         changeInterfaceToUnauthorized();
@@ -176,13 +175,18 @@ const clickLogin = async function () {
         sessionStorage.setItem("accessToken", `bearer ${res.accessToken}`);
         changeInterfaceToAuthorized();
     }
-    initApp();
+    await initApp();
 }
 
 const clickLogout = async function () {
     sessionStorage.removeItem("accessToken");
     changeInterfaceToUnauthorized();
-    initApp();
+    await initApp();
+}
+
+const clickSubmit = async function () {
+    const res = await authorizedPost("users/cart/checkout");
+    (res.error && alert(res.error)) || await initApp();
 }
 
 async function initApp() {
@@ -207,6 +211,7 @@ async function initApp() {
         }
         cTable += getCartFooter(totalPrice);
         document.getElementById("cart").innerHTML = cTable;
+        document.getElementById("ship-it").onclick = clickSubmit;
     } else {
         document.getElementById("cart-empty").style.display = "block";
         document.getElementById("cart-non-empty").style.display = "none";
@@ -217,7 +222,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     initApp();
     document.getElementById("log-btn").onclick = clickLogin;
     document.getElementById("logout-btn").onclick = clickLogout;
-
 });
 
 window.onload = async function () {
