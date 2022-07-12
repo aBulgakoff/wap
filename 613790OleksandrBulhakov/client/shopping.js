@@ -1,6 +1,7 @@
 const serverURL = "http://localhost:3333";
 
 function changeInterfaceToAuthorized() {
+    updateDisplayedName();
     document.getElementById("header-login").style.display = "none";
     document.getElementById("header-welcome").style.display = "block";
     document.getElementById("main-content").style.display = "block";
@@ -16,6 +17,11 @@ function changeInterfaceToUnauthorized() {
     document.getElementById("main-content").style.display = "none";
     document.getElementById("log-btn").style.display = "block";
     document.getElementById("logout-btn").style.display = "none";
+}
+
+const applyAuthorization = async function () {
+    const authorization = sessionStorage.getItem("accessToken");
+    authorization ? changeInterfaceToAuthorized() : changeInterfaceToUnauthorized();
 }
 
 const getProductsLine = function (p) {
@@ -46,10 +52,17 @@ const getCartLine = function (title, price, id, qty) {
 }
 const populateCart = async function (productId) {
     let elementId = `qty-${productId}`;
-    let val = parseInt(document.getElementById(elementId).value) + 1;
-    document.getElementById(elementId).value = val;
-    const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
-    res.error && alert(res.error);
+    let element = document.getElementById(elementId);
+    if (element) {
+        let val = parseInt(element.value) + 1;
+        document.getElementById(elementId).value = val;
+        const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
+        res.error && alert(res.error);
+    } else {
+        const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": 1}});
+        res.error && alert(res.error);
+        initApp();
+    }
 }
 
 
@@ -59,22 +72,23 @@ const changeQty = async function (id, multiplier) {
     document.getElementById(id).value = val;
     const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
     res.error && alert(res.error);
+    val || initApp();
 }
 
 const updateCart = async function (field) {
 
     const val = parseInt(field.value);
+    const productId = field.id.split("-")[1];
 
-    if (Number.isNaN(val) || val < 1) {
-        alert("Please enter a (positive) number.");
+    if (Number.isNaN(val) || val < 0) {
+        alert("Value have to be a positive number.");
         let cart = await fetchCart();
         field.value = cart[productId];
     } else {
         const res = await authorizedPut("users/cart", {"change": {"productId": productId, "qty": val}});
         res.error && alert(res.error);
-
     }
-    console.log(field.value);
+    val || initApp();
 }
 
 const getCartFooter = function (tPrice) {
@@ -157,7 +171,6 @@ const clickLogin = async function () {
     const res = await req.json();
     if (res.accessToken) {
         sessionStorage.setItem("accessToken", `bearer ${res.accessToken}`);
-        updateDisplayedName();
         changeInterfaceToAuthorized();
     }
     initApp();
@@ -170,6 +183,7 @@ const clickLogout = async function () {
 }
 
 async function initApp() {
+    await applyAuthorization();
     let products = await fetchProducts();
     let pTable = '';
     for (const product in products) {
@@ -178,7 +192,6 @@ async function initApp() {
     document.getElementById("products").innerHTML = pTable;
 
     let cart = await fetchCart();
-    console.log(cart);
     let cTable = ''
     let totalPrice = 0;
     for (const order in cart) {
@@ -188,7 +201,6 @@ async function initApp() {
     }
     cTable += getCartFooter(totalPrice);
     document.getElementById("cart").innerHTML = cTable;
-
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {

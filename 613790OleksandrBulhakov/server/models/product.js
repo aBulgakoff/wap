@@ -57,9 +57,8 @@ module.exports = class Product {
 
     static checkStockQtyById(productId, newQty) {
         const index = Product.findIndexById(productId);
-        newQty = db[index].qty - newQty;
-        console.log(newQty)
-        if (newQty < 0) throw new Error("Quantity can not be negative");
+        const stockQty = db[index].qty;
+        if (newQty < 0 || newQty > stockQty) throw new Error("Checkout quantity cannot exceed stock or be negative.");
         return db[index];
     }
 

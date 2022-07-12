@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     if (err.message === 'NOT Found') {
         res.status(404).json({error: err.message});
-    } else if (err.message === "Quantity can not be negative") {
+    } else if (err.message === "Checkout quantity cannot exceed stock or be negative.") {
         res.status(400).json({error: err.message});
     } else {
         console.log(err)

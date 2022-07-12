@@ -17,10 +17,17 @@ exports.getCartById = (req, res, next) => {
 exports.populateCart = (req, res, next) => {
     const userCart = User.getCartByUserId(req.userId);
     const requestedChange = req.body.change;
-    const changeId = requestedChange.productId;
-    const changeQty = requestedChange.qty;
-    Product.checkStockQtyById(changeId, changeQty);
-    userCart[changeId] = changeQty;
+    const productId = requestedChange.productId;
+    const newQty = requestedChange.qty;
+    if (newQty == 0 & Object.keys(userCart).length > 1) {
+        for (const p in userCart) {
+            if (userCart[p] == 0) {
+                delete userCart[p];
+            }
+        }
+    }
+    Product.checkStockQtyById(productId, newQty);
+    userCart[productId] = newQty;
     res.status(200).json(userCart);
 }
 
