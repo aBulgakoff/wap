@@ -169,6 +169,7 @@ const clickLogin = async function () {
         },
     });
     const res = await req.json();
+    res.error && alert(res.error);
     if (res.accessToken) {
         sessionStorage.setItem("accessToken", `bearer ${res.accessToken}`);
         changeInterfaceToAuthorized();

@@ -39,7 +39,6 @@ app.use((err, req, res, next) => {
     } else if (err.message === "Checkout quantity cannot exceed stock or be negative.") {
         res.status(400).json({error: err.message});
     } else {
-        console.log(err)
         res.status(500).json({error: 'Server error'});
     }
 });
